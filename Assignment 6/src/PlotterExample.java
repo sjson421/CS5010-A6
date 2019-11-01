@@ -31,7 +31,7 @@ public class PlotterExample {
     }
 
     try {
-      plotter.write("example.png");
+      plotter.write("../output/example.png");
     } catch (IOException e) {
 
     }
