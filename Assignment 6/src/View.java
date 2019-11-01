@@ -4,6 +4,6 @@ import java.io.InputStreamReader;
 
 public class View {
   public static void main(String[] args) throws IOException {
-    new Controller().go((new LinearRegression()));
+    new Controller().go();
   }
 }

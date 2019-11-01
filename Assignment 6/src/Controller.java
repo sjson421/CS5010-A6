@@ -5,13 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Controller implements IController {
-  @Override
-  public void go(MLAlgorithm a) throws IOException {
+  public void go() throws IOException {
     File linedata1 = new File("../data/linedata-1.txt");
 //    File linedata2 = new File("../data/linedata-2.txt");
 //    File linedata3 = new File("../data/linedata-3.txt");
@@ -28,8 +29,8 @@ public class Controller implements IController {
 //    BufferedReader brCluster4 = new BufferedReader(new FileReader(clusterdata4));
 //    BufferedReader brCluster6 = new BufferedReader(new FileReader(clusterdata6));
 
-    plotLinear(fitPoint(brLine1, a), "../output/linear.png");
-    plotKMeans(fitPoint(brCluster2, a), "../output/cluster.png");
+    plotLinear(fitPoint(brLine1, new LinearRegression()), "../output/linear.png");
+    plotKMeans(fitPoint(brCluster2, new KMeansClustering()), "../output/cluster.png");
   }
 
   /**
@@ -40,12 +41,14 @@ public class Controller implements IController {
    */
   private Map<Point, Point> fitPoint(BufferedReader br, MLAlgorithm a) throws IOException {
     String line;
-    Map<Point, Point> m = new HashMap<>();
+    List<Point> pointList = new ArrayList<>();
     while ((line = br.readLine()) != null) {
       String[] arr = line.split(" ");
       Point p = new Point(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
-      m.put(p, a.fit(p));
+      a.addPoint(p);
+      pointList.add(p);
     }
+    Point p = a.fit();
     return m;
   }
 
@@ -66,6 +69,24 @@ public class Controller implements IController {
 
   /**
    * Helper method for plotting the returned data from a linear regression algorithm.
+   *
+   * @param map Map returned from fit(). Format in (newly entered point, fitted point)
+   */
+  private void plotLinear(Map<Point, Point> map, String outputPath) {
+    ImagePlotter plotter = new ImagePlotter();
+    setUpPlotter(plotter);
+
+    if (map.size() > 0) {
+      for (Point key : map.keySet()) {
+
+        plotter.addLine(x, y, x + 20, y);
+        drawOutput(plotter, outputPath);
+      }
+    }
+  }
+
+  /**
+   * Helper method for plotting the returned data from a k-means clustering algorithm.
    *
    * @param map Map returned from fit(). Format in (newly entered point, fitted point)
    */
