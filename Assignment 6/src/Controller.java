@@ -12,6 +12,17 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Controller implements IController {
+  private View view;
+  private LinearRegression line;
+  private KMeansClustering kmeans;
+
+  public Controller() {
+    view = new View();
+    line = new LinearRegression();
+    /*TODO: WHAT DO I DO HERE TO DECIDE K?*/
+    kmeans = new KMeansClustering(2);
+  }
+
   public void go() throws IOException {
     File linedata1 = new File("../data/linedata-1.txt");
 //    File linedata2 = new File("../data/linedata-2.txt");
@@ -29,77 +40,29 @@ public class Controller implements IController {
 //    BufferedReader brCluster4 = new BufferedReader(new FileReader(clusterdata4));
 //    BufferedReader brCluster6 = new BufferedReader(new FileReader(clusterdata6));
 
-    plotLinear(fitLinear(brLine1, new LinearRegression()), "../output/linear.png");
-    plotKMeans(fitKMeans(brCluster2, new KMeansClustering()), "../output/cluster.png");
+    addPoints(brLine1, line);
+    addPoints(brCluster2, kmeans);
+
+    plotLinear(fitLinear(brLine1, line), "../output/linear.png");
+    plotKMeans(fitKMeans(brCluster2), "../output/cluster.png");
   }
 
-  /**
-   * Helper method for creating and fitting a point.
-   *
-   * @param br Reader for reading in the files of data
-   * @param a  Algorithm to use. Currently, either linear regression or k-means clustering.
-   */
-  private Map<Point, Point> fitLinear(BufferedReader br, MLAlgorithm a) throws IOException {
+  private void addPoints(BufferedReader br, MLAlgorithm algorithm) throws IOException {
     String line;
-    List<Point> pointList = new ArrayList<>();
     while ((line = br.readLine()) != null) {
       String[] arr = line.split(" ");
       Point p = new Point(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
-      a.addPoint(p);
-      pointList.add(p);
+      algorithm.addPoint(p);
     }
-    Point p = a.fit();
+  }
+
+  /**
+   * Helper method for creating and fitting a point to a linear regression algorithm.
+   *
+   * @param br Reader for reading in the files of data
+   */
+  private Map<Point, Point> fitLinear(BufferedReader br, LinearRegression linearRegression) {
+    Point p = linearRegression.fit();
     return m;
-  }
-
-  private void setUpPlotter(ImagePlotter plotter) {
-    plotter.setWidth(400);
-    plotter.setHeight(400);
-
-    plotter.setDimensions(-300, 300, -350, 350);
-  }
-
-  private void drawOutput(ImagePlotter plotter, String outputPath) {
-    try {
-      plotter.write(outputPath);
-    } catch (IOException e) {
-      e.getStackTrace();
-    }
-  }
-
-  /**
-   * Helper method for plotting the returned data from a linear regression algorithm.
-   *
-   * @param map Map returned from fit(). Format in (newly entered point, fitted point)
-   */
-  private void plotLinear(Map<Point, Point> map, String outputPath) {
-    ImagePlotter plotter = new ImagePlotter();
-    setUpPlotter(plotter);
-
-    if (map.size() > 0) {
-      for (Point key : map.keySet()) {
-
-        plotter.addLine(x, y, x + 20, y);
-        drawOutput(plotter, outputPath);
-      }
-    }
-  }
-
-  /**
-   * Helper method for plotting the returned data from a k-means clustering algorithm.
-   *
-   * @param map Map returned from fit(). Format in (newly entered point, fitted point)
-   */
-  private void plotLinear(Map<Point, Point> map, String outputPath) {
-    ImagePlotter plotter = new ImagePlotter();
-    setUpPlotter(plotter);
-
-    if (map.size() > 0) {
-      for (Point key : map.keySet()) {
-
-        plotter.addLine(x, y, x + 20, y);
-        drawOutput(plotter, outputPath);
-      }
-    }
   }
 }

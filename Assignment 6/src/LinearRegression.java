@@ -16,7 +16,12 @@ public class LinearRegression extends AbstractMLAlgorithm {
     size = 0;
   }
 
-  public Point fit() {
+  /**
+   * Gets the best-fit line.
+   *
+   * @return A line with the fields of a, b, and c in the form of c = -ax-by
+   */
+  public Line fit() {
     double a;
     double b;
     double c;
@@ -29,9 +34,7 @@ public class LinearRegression extends AbstractMLAlgorithm {
       b = calculateB();
       c = calculateC();
 
-      double linePointX = pointList.get(0).getX() + 1.0;
-      double linePointY = (c + a * linePointX) / -b;
-      return new Point(linePointX, linePointY);
+      return new Line(a, b, c);
     } else {
       return null;
     }
