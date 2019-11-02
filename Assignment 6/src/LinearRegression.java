@@ -1,61 +1,87 @@
 import java.lang.Math;
-public class LinearRegression implements MLAlgorithm{
-  double [] x = new double[1];
-  double [] y = new double[];
-  private double xSum;
-  private double ySum;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LinearRegression implements MLAlgorithm {
+  private List<Double> x;
+  private List<Double> y;
+
   private double xBar;
   private double yBar;
   private double xxBar;
   private double yyBar;
   private double xyBar;
-  private double d;
   private double theta;
-  private double ft;
-  private double a;
-  private double b;
-  private double c;
+
+  public LinearRegression() {
+    x = new ArrayList<>();
+    y = new ArrayList<>();
+  }
 
   @Override
-  public Point fit(Point newPt) {
-    return null;
+  public void addPoint(Point p) {
+    x.add(p.getX());
+    y.add(p.getY());
   }
 
-  private void calculateAverage(){
-     xSum =0;
-     ySum=0;
-    for(int i =0;i<x.length;i++){
-      xSum += x[i];
-      ySum+= y[i];
+  public Point fit() {
+    double a;
+    double b;
+    double c;
+    if (x.size() > 0) {
+      calculateAverage();
+      calculateXXBar();
+      calculateFt();
+      a = calculateA();
+      b = calculateB();
+      c = calculateC();
+
+      double linePointX = x.get(0) + 1.0;
+      double linePointY = (c + a * linePointX) / -b;
+      return new Point(linePointX, linePointY);
+    } else {
+      return null;
     }
-    xBar = xSum/x.length;
-    yBar = ySum/y.length;
   }
 
-  private void calculateXXBar(){
-    for(int i=0;i<x.length;i++){
-      xxBar+=(x[i]-xBar)*(x[i]-xBar);
-      yyBar+=(y[i]-yBar)*(y[i]-yBar);
-      xyBar+=(x[i]-xxBar)*(y[i]-yBar);
+  private void calculateAverage() {
+    double xSum = 0;
+    double ySum = 0;
+    for (int i = 0; i < x.size(); i++) {
+      xSum += x.get(i);
+      ySum += y.get(i);
     }
-    d = (2*xyBar)/(xxBar-yyBar);
+    xBar = xSum / x.size();
+    yBar = ySum / y.size();
+  }
+
+  private void calculateXXBar() {
+    for (int i = 0; i < x.size(); i++) {
+      xxBar += (x.get(i) - xBar) * (x.get(i) - xBar);
+      yyBar += (y.get(i) - yBar) * (y.get(i) - yBar);
+      xyBar += (x.get(i) - xxBar) * (y.get(i) - yBar);
+    }
+    double d = (2 * xyBar) / (xxBar - yyBar);
     theta = Math.toDegrees(Math.atan(d));
   }
 
-  private void calculateFt(){
-    double ft1 = (yyBar-xxBar)*Math.cos(theta) - 2*xyBar*Math.sin(theta);
-    double ft2 = (yyBar-xxBar)*Math.cos(theta+180) - 2*xyBar*Math.sin(theta+180);
-    if(ft1>ft2){
-      ft = ft1;
-    }
-    else{
-      ft = ft2;
+  private void calculateFt() {
+    double ft1 = (yyBar - xxBar) * Math.cos(theta) - 2 * xyBar * Math.sin(theta);
+    double ft2 = (yyBar - xxBar) * Math.cos(theta + 180) - 2 * xyBar * Math.sin(theta + 180);
+    if (ft1 < ft2) {
+      theta = theta + 180;
     }
   }
-  private void calculateAbc(){
-    a = Math.cos(theta/2);
-    b = Math.sin(theta/2);
-    c = (-a*xBar) - (b*yBar);
 
+  private double calculateA() {
+    return Math.cos(theta / 2);
+  }
+
+  private double calculateB() {
+    return Math.sin(theta / 2);
+  }
+
+  private double calculateC() {
+    return (-calculateA() * xBar) - (calculateB() * yBar);
   }
 }
