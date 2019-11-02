@@ -30,12 +30,12 @@ public class View {
     double b = line.getB();
     double c = line.getC();
 
-    final double X1 = 0;
-    double y1 = getYFromX(X1, a, b, c);
-    final double X2 = 1;
-    double y2 = getYFromX(X2, a, b, c);
+    final int X1 = 0;
+    int y1 = (int) Math.round(getYFromX(X1, a, b, c));
+    final int X2 = 1;
+    int y2 = (int) Math.round(getYFromX(X2, a, b, c));
 
-    //plotter.addLine(X1, y1, X2, y2);
+    plotter.addLine(X1, y1, X2, y2);
     drawOutput(plotter, outputPath);
   }
 
@@ -54,9 +54,9 @@ public class View {
    * Gets the y-coordinate, given an x-coordinate on a line.
    *
    * @param x x-coordinate to find y-coordinate for.
-   * @param a "a" Value, given equation of c=-ax-by
-   * @param b "b" Value, given equation of c=-ax-by
-   * @param c "c" Value, given equation of c=-ax-by
+   * @param a "a" Value, given equation of c = -ax - by
+   * @param b "b" Value, given equation of c = -ax - by
+   * @param c "c" Value, given equation of c = -ax - by
    * @return The y-coordinate, given an x-coordinate on a line.
    */
   private double getYFromX(double x, double a, double b, double c) {
