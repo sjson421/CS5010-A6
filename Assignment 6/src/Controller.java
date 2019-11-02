@@ -13,12 +13,12 @@ import java.util.Scanner;
 
 public class Controller implements IController {
   private View view;
-  private LinearRegression line;
+  private LinearRegression linear;
   private KMeansClustering kmeans;
 
   public Controller() {
     view = new View();
-    line = new LinearRegression();
+    linear = new LinearRegression();
     /*TODO: WHAT DO I DO HERE TO DECIDE K?*/
     kmeans = new KMeansClustering(2);
   }
@@ -40,13 +40,19 @@ public class Controller implements IController {
 //    BufferedReader brCluster4 = new BufferedReader(new FileReader(clusterdata4));
 //    BufferedReader brCluster6 = new BufferedReader(new FileReader(clusterdata6));
 
-    addPoints(brLine1, line);
+    addPoints(brLine1, linear);
     addPoints(brCluster2, kmeans);
 
-    plotLinear(fitLinear(brLine1, line), "../output/linear.png");
-    plotKMeans(fitKMeans(brCluster2), "../output/cluster.png");
+    view.plotLinear(linear.fit(), "../output/linear.png");
+    view.plotKMeans(kmeans.fit(), "../output/cluster.png");
   }
 
+  /**
+   * Helper method to add points to algorithm.
+   * @param br BufferedReader with list of points to add to algorithm dataset.
+   * @param algorithm The algorithm object used.
+   * @throws IOException Thrown if you can't read from br
+   */
   private void addPoints(BufferedReader br, MLAlgorithm algorithm) throws IOException {
     String line;
     while ((line = br.readLine()) != null) {
@@ -54,15 +60,5 @@ public class Controller implements IController {
       Point p = new Point(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
       algorithm.addPoint(p);
     }
-  }
-
-  /**
-   * Helper method for creating and fitting a point to a linear regression algorithm.
-   *
-   * @param br Reader for reading in the files of data
-   */
-  private Map<Point, Point> fitLinear(BufferedReader br, LinearRegression linearRegression) {
-    Point p = linearRegression.fit();
-    return m;
   }
 }

@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class KMeansClustering extends AbstractMLAlgorithm {
@@ -11,8 +9,9 @@ public class KMeansClustering extends AbstractMLAlgorithm {
   }
 
   public Map<Point, Point> fit() {
-    for (int i = 0; i < list.size(); i++) {
-      Point p = list.get(i);
+    for (int i = 0; i < pointList.size(); i++) {
+      Point p = pointList.get(i);
     }
+    return null;
   }
 }
