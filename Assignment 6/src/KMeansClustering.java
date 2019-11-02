@@ -2,21 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class KMeansClustering implements MLAlgorithm{
-  private List<Point> list = new ArrayList<>();
+public class KMeansClustering extends AbstractMLAlgorithm {
   private int k;
 
   public KMeansClustering(int k) {
+    super();
     this.k = k;
   }
+
   public Map<Point, Point> fit() {
     for (int i = 0; i < list.size(); i++) {
       Point p = list.get(i);
     }
-  }
-
-  @Override
-  public void addPoint(Point p) {
-    list.add(p);
   }
 }

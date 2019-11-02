@@ -2,33 +2,26 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinearRegression implements MLAlgorithm {
-  private List<Double> x;
-  private List<Double> y;
-
+public class LinearRegression extends AbstractMLAlgorithm {
   private double xBar;
   private double yBar;
   private double xxBar;
   private double yyBar;
   private double xyBar;
   private double theta;
+  private int size;
 
   public LinearRegression() {
-    x = new ArrayList<>();
-    y = new ArrayList<>();
-  }
-
-  @Override
-  public void addPoint(Point p) {
-    x.add(p.getX());
-    y.add(p.getY());
+    super();
+    size = 0;
   }
 
   public Point fit() {
     double a;
     double b;
     double c;
-    if (x.size() > 0) {
+    size = pointList.size();
+    if (size > 0) {
       calculateAverage();
       calculateXXBar();
       calculateFt();
@@ -36,7 +29,7 @@ public class LinearRegression implements MLAlgorithm {
       b = calculateB();
       c = calculateC();
 
-      double linePointX = x.get(0) + 1.0;
+      double linePointX = pointList.get(0).getX() + 1.0;
       double linePointY = (c + a * linePointX) / -b;
       return new Point(linePointX, linePointY);
     } else {
@@ -47,19 +40,19 @@ public class LinearRegression implements MLAlgorithm {
   private void calculateAverage() {
     double xSum = 0;
     double ySum = 0;
-    for (int i = 0; i < x.size(); i++) {
-      xSum += x.get(i);
-      ySum += y.get(i);
+    for (int i = 0; i < size; i++) {
+      xSum += pointList.get(i).getX();
+      ySum += pointList.get(i).getY();
     }
-    xBar = xSum / x.size();
-    yBar = ySum / y.size();
+    xBar = xSum / size;
+    yBar = ySum / size;
   }
 
   private void calculateXXBar() {
-    for (int i = 0; i < x.size(); i++) {
-      xxBar += (x.get(i) - xBar) * (x.get(i) - xBar);
-      yyBar += (y.get(i) - yBar) * (y.get(i) - yBar);
-      xyBar += (x.get(i) - xxBar) * (y.get(i) - yBar);
+    for (int i = 0; i < size; i++) {
+      xxBar += (pointList.get(i).getX() - xBar) * (pointList.get(i).getX() - xBar);
+      yyBar += (pointList.get(i).getY() - yBar) * (pointList.get(i).getY() - yBar);
+      xyBar += (pointList.get(i).getX() - xxBar) * (pointList.get(i).getY() - yBar);
     }
     double d = (2 * xyBar) / (xxBar - yyBar);
     theta = Math.toDegrees(Math.atan(d));

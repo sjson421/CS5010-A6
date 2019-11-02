@@ -29,8 +29,8 @@ public class Controller implements IController {
 //    BufferedReader brCluster4 = new BufferedReader(new FileReader(clusterdata4));
 //    BufferedReader brCluster6 = new BufferedReader(new FileReader(clusterdata6));
 
-    plotLinear(fitPoint(brLine1, new LinearRegression()), "../output/linear.png");
-    plotKMeans(fitPoint(brCluster2, new KMeansClustering()), "../output/cluster.png");
+    plotLinear(fitLinear(brLine1, new LinearRegression()), "../output/linear.png");
+    plotKMeans(fitKMeans(brCluster2, new KMeansClustering()), "../output/cluster.png");
   }
 
   /**
@@ -39,7 +39,7 @@ public class Controller implements IController {
    * @param br Reader for reading in the files of data
    * @param a  Algorithm to use. Currently, either linear regression or k-means clustering.
    */
-  private Map<Point, Point> fitPoint(BufferedReader br, MLAlgorithm a) throws IOException {
+  private Map<Point, Point> fitLinear(BufferedReader br, MLAlgorithm a) throws IOException {
     String line;
     List<Point> pointList = new ArrayList<>();
     while ((line = br.readLine()) != null) {
