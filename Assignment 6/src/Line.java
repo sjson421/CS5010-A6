@@ -9,14 +9,29 @@ public class Line {
     this.c = c;
   }
 
+  /**
+   * Gets the "a" Value, given equation of c = -ax - by on a line.
+   *
+   * @return "a" Value, given equation of c = -ax - by
+   */
   public double getA() {
     return a;
   }
 
+  /**
+   * Gets the "b" Value, given equation of c = -ax - by on a line.
+   *
+   * @return "b" Value, given equation of c = -ax - by
+   */
   public double getB() {
     return b;
   }
 
+  /**
+   * Gets the "c" Value, given equation of c = -ax - by on a line.
+   *
+   * @return "c" Value, given equation of c = -ax - by
+   */
   public double getC() {
     return c;
   }
