@@ -35,30 +35,35 @@ public class KMeansClustering extends AbstractMLAlgorithm {
     Random rand = new Random();
     double oldError = Double.POSITIVE_INFINITY;
     double newError = Double.POSITIVE_INFINITY;
-    // Select initial random range here for initial cluster centers
-    final int X_RANGE_MIN = 0;
-    final int X_RANGE_MAX = 400;
-    final int Y_RANGE_MIN = -500;
-    final int Y_RANGE_MAX = 300;
+
+    double xRangeMin = Double.POSITIVE_INFINITY;
+    double xRangeMax = Double.NEGATIVE_INFINITY;
+    double yRangeMin = Double.POSITIVE_INFINITY;
+    double yRangeMax = Double.NEGATIVE_INFINITY;
+
+    for (Point p : pointList) {
+      double pX = p.getX();
+      double pY = p.getY();
+
+      if (pX < xRangeMin) {
+        xRangeMin = pX;
+      }
+      if (pX > xRangeMax) {
+        xRangeMax = pX;
+      }
+      if (pY < yRangeMin) {
+        yRangeMin = pY;
+      }
+      if (pY > yRangeMax) {
+        yRangeMax = pY;
+      }
+    }
 
     for (int i = 0; i < k; i++) {
       Point center = new Point(
-              X_RANGE_MIN + (X_RANGE_MAX - X_RANGE_MIN) * rand.nextDouble(),
-              Y_RANGE_MIN + (Y_RANGE_MAX - Y_RANGE_MIN) * rand.nextDouble());
+              xRangeMin + (xRangeMax - xRangeMin) * rand.nextDouble(),
+              yRangeMin + (yRangeMax - yRangeMin) * rand.nextDouble());
       map.put(center, new ArrayList<>());
-    }
-
-    for (Point p : pointList) {
-      double minDist = Double.POSITIVE_INFINITY;
-      Point closestCenter = null;
-      for (Point center : map.keySet()) {
-        double distToCenter = getDistance(p, center);
-        if (distToCenter < minDist) {
-          minDist = distToCenter;
-          closestCenter = center;
-        }
-      }
-      map.get(closestCenter).add(p);
     }
     return getConvergedMap(map, oldError, newError);
   }
@@ -76,11 +81,27 @@ public class KMeansClustering extends AbstractMLAlgorithm {
 
   private PointMapError getConvergedMap(Map<Point, List<Point>> map, double oldError, double newError) {
     int convergenceCount = 0;
-    double percentageError = 1;
+    double percentageError = 100;
     do {
       if (convergenceCount >= 100) {
         break;
       }
+
+      // Assign points to centers in map
+      for (Point p : pointList) {
+        double minDist = Double.POSITIVE_INFINITY;
+        Point closestCenter = null;
+        for (Point center : map.keySet()) {
+          double distToCenter = getDistance(p, center);
+          if (distToCenter < minDist) {
+            minDist = distToCenter;
+            closestCenter = center;
+          }
+        }
+        map.get(closestCenter).add(p);
+      }
+
+      // Calculates new center point at center of all points
       Map<Point, List<Point>> newMap = new HashMap<>(400);
       for (List<Point> clusterPoints : map.values()) {
         double sumX = 0.0;
