@@ -1,17 +1,27 @@
-public class Point {
+/**
+ * POJO class for holding onto the data of a single point.
+ */
+class Point {
   private double x;
   private double y;
 
-  public Point(double x, double y) {
+  Point(double x, double y) {
     this.x = x;
     this.y = y;
   }
 
-  public double getX() {
+  /**
+   * Gets the x value of point.
+   * @return Point x value
+   */
+  double getX() {
     return x;
   }
-
-  public double getY() {
+  /**
+   * Gets the y value of point.
+   * @return Point y value
+   */
+  double getY() {
     return y;
   }
 }

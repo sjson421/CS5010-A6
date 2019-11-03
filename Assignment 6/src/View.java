@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Random;
 
 public class View {
   public static void main(String[] args) throws IOException {
-    new Controller().go();
+    new Controller(new InputStreamReader(System.in), System.out).go();
   }
 
   /**
@@ -29,15 +30,15 @@ public class View {
    * @param outputPath Output path for the plotted image.
    */
   public void plotLinear(Line line, List<Point> points, String outputPath) {
-    ImagePlotter plotter = setUpPlotter();
+    ImagePlotter plotter = setUpPlotter(-500,500,-500,500);
 
     double a = line.getA();
     double b = line.getB();
     double c = line.getC();
 
-    final int X1 = 0;
+    final int X1 = -1000;
     int y1 = (int) Math.round(getYFromX(X1, a, b, c));
-    final int X2 = 1;
+    final int X2 = 1000;
     int y2 = (int) Math.round(getYFromX(X2, a, b, c));
 
     for (Point point : points) {
@@ -50,19 +51,18 @@ public class View {
   /**
    * Method for plotting the returned data from a k-means clustering algorithm.
    *
-   * @param map        Map returned from fitting to k-means. Format in (point, cluster center
-   *                   point).
-   * @param points     Points in the dataset of the algorithm.
+   * @param map        Map returned from fitting to k-means. Format in (cluster center, related data
+   *                   set point).
    * @param outputPath Output path for the plotted image.
    */
-  public void plotKMeans(Map<Point, Point> map, List<Point> points, String outputPath) {
-    ImagePlotter plotter = setUpPlotter();
+  public void plotKMeans(Map<Point, List<Point>> map, String outputPath) {
+    ImagePlotter plotter = setUpPlotter(0,400,-500,300);
 
     if (map.size() > 0) {
       Map<Point, Color> centerColor = new HashMap<>();
-      for (Map.Entry<Point, Point> entry : map.entrySet()) {
-        Point point = entry.getKey();
-        Point clusterCenter = entry.getValue();
+      for (Map.Entry<Point, List<Point>> entry : map.entrySet()) {
+        Point clusterCenter = entry.getKey();
+        List<Point> points = entry.getValue();
 
         if (!centerColor.containsKey(clusterCenter)) {
           Random rand = new Random();
@@ -74,9 +74,11 @@ public class View {
             float b = rand.nextFloat();
             randomColor = new Color(r, g, b);
           } while (centerColor.containsValue(randomColor));
-          centerColor.put(point, randomColor);
+          centerColor.put(clusterCenter, randomColor);
         }
-        plotPoint(point, plotter, centerColor.get(clusterCenter));
+        for (Point point : points) {
+          plotPoint(point, plotter, centerColor.get(clusterCenter));
+        }
         drawOutput(plotter, outputPath);
       }
     }
@@ -100,12 +102,12 @@ public class View {
    *
    * @return The completely set-up image plotter.
    */
-  private ImagePlotter setUpPlotter() {
+  private ImagePlotter setUpPlotter(int xMin, int xMax, int yMin, int yMax) {
     ImagePlotter plotter = new ImagePlotter();
     plotter.setWidth(400);
     plotter.setHeight(400);
 
-    plotter.setDimensions(-300, 300, -350, 350);
+    plotter.setDimensions(xMin, xMax, yMin, yMax);
     return plotter;
   }
 
