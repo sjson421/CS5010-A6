@@ -3,41 +3,60 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Controller implements IController {
   private View view;
   private LinearRegression linear;
   private KMeansClustering kmeans;
+  private Readable in;
+  private Appendable out;
 
-  public Controller() {
+  public Controller(Readable in, Appendable out) {
+    this.in = in;
+    this.out = out;
     view = new View();
     linear = new LinearRegression();
     kmeans = new KMeansClustering();
   }
 
   public void go() throws IOException {
-    File linedata1 = new File("../data/linedata-1.txt");
-    File clusterdata2 = new File("../data/clusterdata-2.txt");
+    String linearData = "data/linedata-1.txt";
+    String kMeansData = "data/clusterdata-2.txt";
+    Scanner s = new Scanner(in);
+//    out.append("Enter the location of the linear regression data (probably in data/<something>):\n");
+//    String linearData = s.nextLine();
+//    out.append("Enter the location of the k-means clustering data (probably in data/<something>):\n");
+//    String kMeansData = s.nextLine();
+    out.append("Enter k-value to use in k-means clustering:\n");
+    int k = 0;
+    try {
+      k = Integer.parseInt(s.nextLine());
+    } catch (NumberFormatException e) {
+      out.append("You did not enter a number.\n");
+      e.printStackTrace();
+      return;
+    }
 
-    BufferedReader brLine1 = new BufferedReader(new FileReader(linedata1));
-    BufferedReader brCluster2 = new BufferedReader(new FileReader(clusterdata2));
-
+    File linedata = new File(linearData);
+    File clusterdata = new File(kMeansData);
+    BufferedReader brLine1;
+    BufferedReader brCluster2;
+    try {
+      brLine1 = new BufferedReader(new FileReader(linedata));
+      brCluster2 = new BufferedReader(new FileReader(clusterdata));
+    } catch (FileNotFoundException e) {
+      out.append("No data in your specified location\n");
+      e.printStackTrace();
+      return;
+    }
     List<Point> linePoints = addPoints(brLine1, linear);
-    List<Point> kmeansPoints = addPoints(brCluster2, kmeans);
+    addPoints(brCluster2, kmeans);
 
     view.plotLinear(linear.fit(), linePoints, "output/linear.png");
-    /*
-    TODO: WHAT DO I DO HERE TO DECIDE K?
-     */
-    view.plotKMeans(kmeans.fit(2), kmeansPoints, "output/cluster.png");
+    view.plotKMeans(kmeans.fit(k), "output/cluster.png");
   }
 
   /**

@@ -1,9 +1,12 @@
-public class Line {
+/**
+ * POJO class for holding onto the data of a line, in the format of c = -ax - by
+ */
+class Line {
   private double a;
   private double b;
   private double c;
 
-  protected Line(double a, double b, double c) {
+  Line(double a, double b, double c) {
     this.a = a;
     this.b = b;
     this.c = c;
@@ -14,7 +17,7 @@ public class Line {
    *
    * @return "a" Value, given equation of c = -ax - by
    */
-  public double getA() {
+  double getA() {
     return a;
   }
 
@@ -23,7 +26,7 @@ public class Line {
    *
    * @return "b" Value, given equation of c = -ax - by
    */
-  public double getB() {
+  double getB() {
     return b;
   }
 
@@ -32,7 +35,7 @@ public class Line {
    *
    * @return "c" Value, given equation of c = -ax - by
    */
-  public double getC() {
+  double getC() {
     return c;
   }
 }
