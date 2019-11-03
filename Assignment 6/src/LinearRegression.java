@@ -41,8 +41,8 @@ public class LinearRegression extends AbstractMLAlgorithm {
   }
 
   private void calculateAverage() {
-    double xSum = 0;
-    double ySum = 0;
+    double xSum = 0.0;
+    double ySum = 0.0;
     for (int i = 0; i < size; i++) {
       xSum += pointList.get(i).getX();
       ySum += pointList.get(i).getY();
@@ -58,23 +58,24 @@ public class LinearRegression extends AbstractMLAlgorithm {
       xyBar += (pointList.get(i).getX() - xxBar) * (pointList.get(i).getY() - yBar);
     }
     double d = (2 * xyBar) / (xxBar - yyBar);
-    theta = Math.toDegrees(Math.atan(d));
+
+    theta = (Math.atan(d));
   }
 
   private void calculateFt() {
-    double ft1 = (yyBar - xxBar) * Math.cos(theta) - 2 * xyBar * Math.sin(theta);
-    double ft2 = (yyBar - xxBar) * Math.cos(theta + 180) - 2 * xyBar * Math.sin(theta + 180);
+    double ft1 = (yyBar - xxBar) * (Math.cos(theta)) - 2.0 * xyBar * Math.sin(theta);
+    double ft2 = ((yyBar - xxBar) * (Math.cos((theta+Math.PI)))) - (2.0 * xyBar * Math.sin((theta+Math.PI))  );
     if (ft1 < ft2) {
-      theta = theta + 180;
+      theta = theta + Math.PI;
     }
   }
 
   private double calculateA() {
-    return Math.cos(theta / 2);
+    return Math.cos((theta/2.0));
   }
 
   private double calculateB() {
-    return Math.sin(theta / 2);
+    return Math.sin((theta/2.0));
   }
 
   private double calculateC() {
