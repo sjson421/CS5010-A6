@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Provides the plotting methods for the machine learning algorithms.
+ */
 public class View {
 
   /**
@@ -21,15 +24,15 @@ public class View {
     double b = line.getB();
     double c = line.getC();
 
-    final int X1 = -1000;
-    int y1 = (int) Math.round(getYFromX(X1, a, b, c));
-    final int X2 = 1000;
-    int y2 = (int) Math.round(getYFromX(X2, a, b, c));
+    final int x1 = -1000;
+    int y1 = (int) Math.round(getYFromX(x1, a, b, c));
+    final int x2 = 1000;
+    int y2 = (int) Math.round(getYFromX(x2, a, b, c));
 
     for (Point point : points) {
       plotPoint(point, plotter, Color.BLACK);
     }
-    plotter.addLine(X1, y1, X2, y2);
+    plotter.addLine(x1, y1, x2, y2);
     drawOutput(plotter, outputPath);
   }
 
@@ -58,7 +61,8 @@ public class View {
             float g = rand.nextFloat();
             float b = rand.nextFloat();
             randomColor = new Color(r, g, b);
-          } while (centerColor.containsValue(randomColor));
+          }
+          while (centerColor.containsValue(randomColor));
           centerColor.put(clusterCenter, randomColor);
         }
         for (Point point : points) {

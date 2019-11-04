@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Implementation for the controller in IController.
+ */
 public class Controller implements IController {
   private View view;
   private LinearRegression linear;
@@ -14,7 +17,17 @@ public class Controller implements IController {
   private Readable in;
   private Appendable out;
 
-  public Controller(LinearRegression linear, KMeansClustering kmeans, View view, Readable in, Appendable out) {
+  /**
+   * Creates a controller with the following models and view.
+   *
+   * @param linear Linear regression model.
+   * @param kmeans K-means clustering model.
+   * @param view   View that handles the plotting.
+   * @param in     Where the input text will be given.
+   * @param out    Where the outputted text will be shown.
+   */
+  public Controller(LinearRegression linear, KMeansClustering kmeans,
+                    View view, Readable in, Appendable out) {
     this.view = view;
     this.in = in;
     this.out = out;
@@ -22,16 +35,21 @@ public class Controller implements IController {
     this.kmeans = kmeans;
   }
 
-  public void go() throws IOException {
-    String linearData = "data/linedata-1.txt";
-    String kMeansData = "data/clusterdata-2.txt";
+  /**
+   * Called in the main method to run the main functionality of the controller.
+   *
+   * @throws IOException Thrown in the case of invalid given input or output locations
+   */
+  public void runProgram() throws IOException {
+    String linearData;
+    String kMeansData;
     Scanner s = new Scanner(in);
-//    out.append("Enter the location of the linear regression data (probably in data/<something>):\n");
-//    String linearData = s.nextLine();
-//    out.append("Enter the location of the k-means clustering data (probably in data/<something>):\n");
-//    String kMeansData = s.nextLine();
+    out.append("Enter the location of the linear regression data:\n");
+    linearData = s.nextLine();
+    out.append("Enter the location of the k-means clustering data:\n");
+    kMeansData = s.nextLine();
     out.append("Enter k-value to use in k-means clustering:\n");
-    int k = 0;
+    int k;
     try {
       k = Integer.parseInt(s.nextLine());
     } catch (NumberFormatException e) {
@@ -62,6 +80,8 @@ public class Controller implements IController {
 
     view.plotLinear(linear.fit(), linePoints, "output/linear.png");
     view.plotKMeans(kmeans.fit(k), "output/cluster.png");
+
+    out.append("Your plotted images are in the output folder.");
   }
 
   /**

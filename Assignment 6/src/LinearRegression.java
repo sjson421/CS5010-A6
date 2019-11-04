@@ -1,7 +1,7 @@
-import java.lang.Math;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Class handling the linear regression machine learning algorithm. To use properly, add points
+ * first using addPoints() then use fit().
+ */
 public class LinearRegression extends AbstractMLAlgorithm {
   private double xBar;
   private double yBar;
@@ -11,6 +11,9 @@ public class LinearRegression extends AbstractMLAlgorithm {
   private double theta;
   private int size;
 
+  /**
+   * Initialized by default with an empty list of points.
+   */
   public LinearRegression() {
     super();
     size = 0;
@@ -64,18 +67,19 @@ public class LinearRegression extends AbstractMLAlgorithm {
 
   private void calculateFt() {
     double ft1 = (yyBar - xxBar) * (Math.cos(theta)) - 2.0 * xyBar * Math.sin(theta);
-    double ft2 = ((yyBar - xxBar) * (Math.cos((theta+Math.PI)))) - (2.0 * xyBar * Math.sin((theta+Math.PI))  );
+    double ft2 = ((yyBar - xxBar) * (Math.cos((theta + Math.PI))))
+            - (2.0 * xyBar * Math.sin((theta + Math.PI)));
     if (ft1 < ft2) {
       theta = theta + Math.PI;
     }
   }
 
   private double calculateA() {
-    return Math.cos((theta/2.0));
+    return Math.cos((theta / 2.0));
   }
 
   private double calculateB() {
-    return Math.sin((theta/2.0));
+    return Math.sin((theta / 2.0));
   }
 
   private double calculateC() {

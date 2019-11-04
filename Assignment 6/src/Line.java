@@ -1,5 +1,5 @@
 /**
- * POJO class for holding onto the data of a line, in the format of ax+by+c=0
+ * POJO class for holding onto the data of a line, in the format of ax+by+c=0.
  */
 class Line {
   private double a;

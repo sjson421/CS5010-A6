@@ -4,7 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Class handling the k-means clustering machine learning algorithm. To use properly, add points
+ * first using addPoints() then use fit() with a specified k.
+ */
 public class KMeansClustering extends AbstractMLAlgorithm {
+  /**
+   * Initialized by default with an empty list of points.
+   */
   public KMeansClustering() {
     super();
   }
@@ -19,8 +26,8 @@ public class KMeansClustering extends AbstractMLAlgorithm {
     double minError = Double.POSITIVE_INFINITY;
     Map<Point, List<Point>> bestMap = null;
 
-    final int MAX_RANSAC = 10;
-    for (int i = 0; i < MAX_RANSAC; i++) {
+    int maxRansac = 10;
+    for (int i = 0; i < maxRansac; i++) {
       PointMapError pme = runKMeans(k);
       if (pme.getError() < minError) {
         minError = pme.getError();
@@ -123,15 +130,16 @@ public class KMeansClustering extends AbstractMLAlgorithm {
       if (Double.isNaN(percentageError)) {
         percentageError = 1;
       }
-    } while (percentageError > 0.01);
+    }
+    while (percentageError > 0.01);
     return new PointMapError(map, newError);
   }
 
   private double getNewError(Point newCenter, List<Point> clusterPoints) {
-    double sumDistance = 0.0;
-    for (Point p : clusterPoints) {
-      sumDistance += getDistance(newCenter, p);
-    }
-    return sumDistance/clusterPoints.size();
+    return clusterPoints
+            .stream()
+            .mapToDouble(point -> getDistance(point, newCenter))
+            .average()
+            .orElse(0.0);
   }
 }

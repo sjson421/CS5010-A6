@@ -7,6 +7,6 @@ import java.io.InputStreamReader;
 public class ProgramRunner {
   public static void main(String[] args) throws IOException {
     new Controller(new LinearRegression(), new KMeansClustering(), new View(),
-            new InputStreamReader(System.in), System.out).go();
+            new InputStreamReader(System.in), System.out).runProgram();
   }
 }

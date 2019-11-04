@@ -12,13 +12,16 @@ class Point {
 
   /**
    * Gets the x value of point.
+   *
    * @return Point x value
    */
   double getX() {
     return x;
   }
+
   /**
    * Gets the y value of point.
+   *
    * @return Point y value
    */
   double getY() {
