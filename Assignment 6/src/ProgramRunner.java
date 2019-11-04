@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
  */
 public class ProgramRunner {
   public static void main(String[] args) throws IOException {
-    new Controller(new LinearRegression(), new KMeansClustering(), new View(),
+    new Controller(new LinearRegression(), new KMeansClustering(),
+            new ViewLinear(), new ViewKMeans(),
             new InputStreamReader(System.in), System.out).runProgram();
   }
 }

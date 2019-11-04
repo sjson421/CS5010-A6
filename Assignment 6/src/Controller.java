@@ -11,9 +11,10 @@ import java.util.Scanner;
  * Implementation for the controller in IController.
  */
 public class Controller implements IController {
-  private View view;
   private LinearRegression linear;
   private KMeansClustering kmeans;
+  private ViewLinear viewLinear;
+  private ViewKMeans viewKMeans;
   private Readable in;
   private Appendable out;
 
@@ -22,13 +23,16 @@ public class Controller implements IController {
    *
    * @param linear Linear regression model.
    * @param kmeans K-means clustering model.
-   * @param view   View that handles the plotting.
+   * @param viewLinear View for linear regression.
+   * @param viewKMeans View for k-means clustering.
    * @param in     Where the input text will be given.
    * @param out    Where the outputted text will be shown.
    */
-  public Controller(LinearRegression linear, KMeansClustering kmeans,
-                    View view, Readable in, Appendable out) {
-    this.view = view;
+  protected Controller(LinearRegression linear, KMeansClustering kmeans,
+                    ViewLinear viewLinear, ViewKMeans viewKMeans,
+                    Readable in, Appendable out) {
+    this.viewLinear = viewLinear;
+    this.viewKMeans = viewKMeans;
     this.in = in;
     this.out = out;
     this.linear = linear;
@@ -78,8 +82,8 @@ public class Controller implements IController {
     List<Point> linePoints = addPoints(brLine1, linear);
     addPoints(brCluster2, kmeans);
 
-    view.plotLinear(linear.fit(), linePoints, "output/linear.png");
-    view.plotKMeans(kmeans.fit(k), "output/cluster.png");
+    viewLinear.plotLinear(linear.fit(), linePoints, "output/linear.png");
+    viewKMeans.plotKMeans(kmeans.fit(k), "output/cluster.png");
 
     out.append("Your plotted images are in the output folder.");
   }
