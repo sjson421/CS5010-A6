@@ -10,8 +10,6 @@ public class KMeansClusteringTest {
   private KMeansClustering k1;
   private KMeansClustering k2;
 
-  private Point p1;
-  private Point p2;
   @Before
   public void setUp() {
     k1 = new KMeansClustering();

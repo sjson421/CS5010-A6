@@ -38,7 +38,7 @@ public class KMeansClustering extends AbstractMLAlgorithm {
   }
 
   private PointMapError runKMeans(int k) {
-    Map<Point, List<Point>> map = new HashMap<>(400);
+    Map<Point, List<Point>> map = new HashMap<>();
     Random rand = new Random();
 
     double xRangeMin = Double.POSITIVE_INFINITY;
@@ -73,27 +73,17 @@ public class KMeansClustering extends AbstractMLAlgorithm {
     return getConvergedMap(map);
   }
 
-  /**
-   * Calculates the distance between two points.
-   *
-   * @param p1 First point
-   * @param p2 Second point
-   * @return Distance between p1 and p2
-   */
-  private double getDistance(Point p1, Point p2) {
-    return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
-  }
-
   private PointMapError getConvergedMap(Map<Point, List<Point>> map) {
     int convergenceCount = 0;
     double percentageError = 100;
     double newError = Double.POSITIVE_INFINITY;
+
     do {
-      if (convergenceCount >= 100) {
-        break;
-      }
       double oldError = newError;
 
+      for (Map.Entry<Point, List<Point>> entry : map.entrySet()) {
+        entry.setValue(new ArrayList<>());
+      }
       // Assign points to centers in map
       for (Point p : pointList) {
         double minDist = Double.POSITIVE_INFINITY;
@@ -109,7 +99,7 @@ public class KMeansClustering extends AbstractMLAlgorithm {
       }
 
       // Calculates new center point at center of all points
-      Map<Point, List<Point>> newMap = new HashMap<>(400);
+      Map<Point, List<Point>> newMap = new HashMap<>();
       for (List<Point> clusterPoints : map.values()) {
         double sumX = 0.0;
         double sumY = 0.0;
@@ -128,10 +118,10 @@ public class KMeansClustering extends AbstractMLAlgorithm {
       map = newMap;
       convergenceCount++;
       if (Double.isNaN(percentageError)) {
-        percentageError = 1;
+        percentageError = 100;
       }
     }
-    while (percentageError > 0.01);
+    while (percentageError > 0.01 && convergenceCount <= 100);
     return new PointMapError(map, newError);
   }
 
@@ -141,5 +131,16 @@ public class KMeansClustering extends AbstractMLAlgorithm {
             .mapToDouble(point -> getDistance(point, newCenter))
             .average()
             .orElse(0.0);
+  }
+
+  /**
+   * Calculates the distance between two points.
+   *
+   * @param p1 First point
+   * @param p2 Second point
+   * @return Distance between p1 and p2
+   */
+  private double getDistance(Point p1, Point p2) {
+    return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
   }
 }
