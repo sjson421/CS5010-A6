@@ -1,26 +1,11 @@
 import java.awt.Color;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class View {
-  public static void main(String[] args) throws IOException {
-    new Controller(new InputStreamReader(System.in), System.out).go();
-  }
-
-  /**
-   * Helper method for plotting a point in the dataset.
-   *
-   * @param point   Point in the dataset in the algorithm to plot.
-   * @param plotter ImagePlotter to plot these points into, on the algorithm plot specified.
-   * @param color   Color to plot point as
-   */
-  private void plotPoint(Point point, ImagePlotter plotter, Color color) {
-    plotter.addPoint((int) Math.round(point.getX()), (int) Math.round(point.getY()), color);
-  }
 
   /**
    * Method for plotting the returned data from a linear regression algorithm.
@@ -30,7 +15,7 @@ public class View {
    * @param outputPath Output path for the plotted image.
    */
   public void plotLinear(Line line, List<Point> points, String outputPath) {
-    ImagePlotter plotter = setUpPlotter(-500,500,-500,500);
+    ImagePlotter plotter = setUpPlotter(-500, 500, -500, 500);
 
     double a = line.getA();
     double b = line.getB();
@@ -56,7 +41,7 @@ public class View {
    * @param outputPath Output path for the plotted image.
    */
   public void plotKMeans(Map<Point, List<Point>> map, String outputPath) {
-    ImagePlotter plotter = setUpPlotter(0,400,-500,300);
+    ImagePlotter plotter = setUpPlotter(0, 500, -500, 500);
 
     if (map.size() > 0) {
       Map<Point, Color> centerColor = new HashMap<>();
@@ -85,16 +70,27 @@ public class View {
   }
 
   /**
+   * Helper method for plotting a point in the dataset.
+   *
+   * @param point   Point in the dataset in the algorithm to plot.
+   * @param plotter ImagePlotter to plot these points into, on the algorithm plot specified.
+   * @param color   Color to plot point as
+   */
+  private void plotPoint(Point point, ImagePlotter plotter, Color color) {
+    plotter.addPoint((int) Math.round(point.getX()), (int) Math.round(point.getY()), color);
+  }
+
+  /**
    * Gets the y-coordinate, given an x-coordinate on a line.
    *
    * @param x x-coordinate to find y-coordinate for.
-   * @param a "a" Value, given equation of c = -ax - by
-   * @param b "b" Value, given equation of c = -ax - by
-   * @param c "c" Value, given equation of c = -ax - by
+   * @param a "a" Value, given equation of ax+by+c=0
+   * @param b "b" Value, given equation of ax+by+c=0
+   * @param c "c" Value, given equation of ax+by+c=0
    * @return The y-coordinate, given an x-coordinate on a line.
    */
   private double getYFromX(double x, double a, double b, double c) {
-    return (c + a * x) / -b;
+    return (-c - a * x) / b;
   }
 
   /**

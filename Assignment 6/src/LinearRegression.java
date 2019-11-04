@@ -55,7 +55,7 @@ public class LinearRegression extends AbstractMLAlgorithm {
     for (int i = 0; i < size; i++) {
       xxBar += (pointList.get(i).getX() - xBar) * (pointList.get(i).getX() - xBar);
       yyBar += (pointList.get(i).getY() - yBar) * (pointList.get(i).getY() - yBar);
-      xyBar += (pointList.get(i).getX() - xxBar) * (pointList.get(i).getY() - yBar);
+      xyBar += (pointList.get(i).getX() - xBar) * (pointList.get(i).getY() - yBar);
     }
     double d = (2 * xyBar) / (xxBar - yyBar);
 

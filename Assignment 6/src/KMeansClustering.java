@@ -33,8 +33,6 @@ public class KMeansClustering extends AbstractMLAlgorithm {
   private PointMapError runKMeans(int k) {
     Map<Point, List<Point>> map = new HashMap<>(400);
     Random rand = new Random();
-    double oldError = Double.POSITIVE_INFINITY;
-    double newError = Double.POSITIVE_INFINITY;
 
     double xRangeMin = Double.POSITIVE_INFINITY;
     double xRangeMax = Double.NEGATIVE_INFINITY;
@@ -65,11 +63,11 @@ public class KMeansClustering extends AbstractMLAlgorithm {
               yRangeMin + (yRangeMax - yRangeMin) * rand.nextDouble());
       map.put(center, new ArrayList<>());
     }
-    return getConvergedMap(map, oldError, newError);
+    return getConvergedMap(map);
   }
 
   /**
-   * Calculates the distance between two points
+   * Calculates the distance between two points.
    *
    * @param p1 First point
    * @param p2 Second point
@@ -79,13 +77,15 @@ public class KMeansClustering extends AbstractMLAlgorithm {
     return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
   }
 
-  private PointMapError getConvergedMap(Map<Point, List<Point>> map, double oldError, double newError) {
+  private PointMapError getConvergedMap(Map<Point, List<Point>> map) {
     int convergenceCount = 0;
     double percentageError = 100;
+    double newError = Double.POSITIVE_INFINITY;
     do {
       if (convergenceCount >= 100) {
         break;
       }
+      double oldError = newError;
 
       // Assign points to centers in map
       for (Point p : pointList) {
@@ -120,15 +120,18 @@ public class KMeansClustering extends AbstractMLAlgorithm {
       }
       map = newMap;
       convergenceCount++;
+      if (Double.isNaN(percentageError)) {
+        percentageError = 1;
+      }
     } while (percentageError > 0.01);
     return new PointMapError(map, newError);
   }
 
   private double getNewError(Point newCenter, List<Point> clusterPoints) {
-    double newError = 0.0;
+    double sumDistance = 0.0;
     for (Point p : clusterPoints) {
-      newError += getDistance(newCenter, p);
+      sumDistance += getDistance(newCenter, p);
     }
-    return newError;
+    return sumDistance/clusterPoints.size();
   }
 }
