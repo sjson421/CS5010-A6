@@ -1,5 +1,5 @@
 /**
- * POJO class for holding onto the data of a line, in the format of c = -ax - by
+ * POJO class for holding onto the data of a line, in the format of ax+by+c=0
  */
 class Line {
   private double a;
@@ -13,27 +13,27 @@ class Line {
   }
 
   /**
-   * Gets the "a" Value, given equation of c = -ax - by on a line.
+   * Gets the "a" Value, given equation of ax+by+c=0 on a line.
    *
-   * @return "a" Value, given equation of c = -ax - by
+   * @return "a" Value, given equation of ax+by+c=0
    */
   double getA() {
     return a;
   }
 
   /**
-   * Gets the "b" Value, given equation of c = -ax - by on a line.
+   * Gets the "b" Value, given equation of ax+by+c=0 on a line.
    *
-   * @return "b" Value, given equation of c = -ax - by
+   * @return "b" Value, given equation of ax+by+c=0
    */
   double getB() {
     return b;
   }
 
   /**
-   * Gets the "c" Value, given equation of c = -ax - by on a line.
+   * Gets the "c" Value, given equation of ax+by+c=0 on a line.
    *
-   * @return "c" Value, given equation of c = -ax - by
+   * @return "c" Value, given equation of ax+by+c=0
    */
   double getC() {
     return c;

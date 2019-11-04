@@ -14,12 +14,12 @@ public class Controller implements IController {
   private Readable in;
   private Appendable out;
 
-  public Controller(Readable in, Appendable out) {
+  public Controller(LinearRegression linear, KMeansClustering kmeans, View view, Readable in, Appendable out) {
+    this.view = view;
     this.in = in;
     this.out = out;
-    view = new View();
-    linear = new LinearRegression();
-    kmeans = new KMeansClustering();
+    this.linear = linear;
+    this.kmeans = kmeans;
   }
 
   public void go() throws IOException {
@@ -37,6 +37,11 @@ public class Controller implements IController {
     } catch (NumberFormatException e) {
       out.append("You did not enter a number.\n");
       e.printStackTrace();
+      return;
+    }
+
+    if (k < 1) {
+      out.append("k must be at least 1.\n");
       return;
     }
 
